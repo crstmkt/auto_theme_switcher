@@ -1,38 +1,42 @@
 #!/bin/bash
 
+# Setze die Koordinaten deines Standorts mit N/S und E/W
+LATITUDE="LATITUDE"
+LONGITUDE="LONGITUDE"
+
 # Set your preferred times here (24-hour format)
-DAY_THEME_HOUR=6      # Time to switch to light theme (e.g., 6 for 6:00 AM)
-DAY_THEME_MINUTE=0    # Minutes for light theme switch
-NIGHT_THEME_HOUR=17   # Time to switch to dark theme (e.g., 17 for 5:00 PM)
-NIGHT_THEME_MINUTE=30 # Minutes for dark theme switch
+DAY_THEME_HOUR=$(sunwait -p $LATITUDE $LONGITUDE | grep "Sun rises" | awk '{print substr($3, 2,1)}')     # Time to switch to light theme (e.g., 6 for 6:00 AM)
+DAY_THEME_MINUTE=$(sunwait -p $LATITUDE $LONGITUDE | grep "Sun rises" | awk '{print substr($3, 3,2)}')    # Minutes for light theme switch
+NIGHT_THEME_HOUR=$(sunwait -p $LATITUDE $LONGITUDE | grep "Sun rises" | awk '{print substr($6, 1,2)}')   # Time to switch to dark theme (e.g., 17 for 5:00 PM)
+NIGHT_THEME_MINUTE=$(sunwait -p $LATITUDE $LONGITUDE | grep "Sun rises" | awk '{print substr($6, 3,2)}') # Minutes for dark theme switch
 
 # Set your preferred themes
 # Light theme settings
-LIGHT_GTK_THEME="Yaru"          # Your preferred light GTK theme
-LIGHT_ICON_THEME="Yaru"         # Your preferred light icon theme
+#LIGHT_GTK_THEME="Yaru"          # Your preferred light GTK theme
+#LIGHT_ICON_THEME="Yaru"         # Your preferred light icon theme
 LIGHT_COLOR_SCHEME="prefer-light"
 
 # Dark theme settings
-DARK_GTK_THEME="Yaru-dark"      # Your preferred dark GTK theme
-DARK_ICON_THEME="Yaru-dark"     # Your preferred dark icon theme
+#DARK_GTK_THEME="Yaru-dark"      # Your preferred dark GTK theme
+#DARK_ICON_THEME="Yaru-dark"     # Your preferred dark icon theme
 DARK_COLOR_SCHEME="prefer-dark"
 
 DAY_THEME_TIME=$((DAY_THEME_HOUR * 60 + DAY_THEME_MINUTE))
 NIGHT_THEME_TIME=$((NIGHT_THEME_HOUR * 60 + NIGHT_THEME_MINUTE))
 
 # Error logging file location
-log_file="$HOME/bin/auto_theme_switcher_errors.log"
+log_file="$HOME/.config/autostart-scripts/logs/night-theme-switcher.log"
 exec 2> >(while read -r line; do echo "$(date): $line" >> "$log_file"; done)
 
 set_light_theme() {
-    gsettings set org.gnome.desktop.interface gtk-theme "$LIGHT_GTK_THEME"
-    gsettings set org.gnome.desktop.interface icon-theme "$LIGHT_ICON_THEME"
+    #gsettings set org.gnome.desktop.interface gtk-theme "$LIGHT_GTK_THEME"
+    #gsettings set org.gnome.desktop.interface icon-theme "$LIGHT_ICON_THEME"
     gsettings set org.gnome.desktop.interface color-scheme "$LIGHT_COLOR_SCHEME"
 }
 
 set_dark_theme() {
-    gsettings set org.gnome.desktop.interface gtk-theme "$DARK_GTK_THEME"
-    gsettings set org.gnome.desktop.interface icon-theme "$DARK_ICON_THEME"
+    #gsettings set org.gnome.desktop.interface gtk-theme "$DARK_GTK_THEME"
+    #gsettings set org.gnome.desktop.interface icon-theme "$DARK_ICON_THEME"
     gsettings set org.gnome.desktop.interface color-scheme "$DARK_COLOR_SCHEME"
 }
 
